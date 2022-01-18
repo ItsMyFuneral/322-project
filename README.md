@@ -18,7 +18,8 @@ Team-04: Ryan Bowler, Jordan Colledge, Joonsik Kim, Karen Masuda, Nathan Wright
   - b. Git -> Project from Git (with smart import) -> Next
   - c. Clone URI -> Next
   - d. Paste the URI in the "URI" box if it's empty. Input your GitHub username under User and the token from the previous step under Password. Check off "Store in Secure Store" and hit Next.
-  - e. Next -> Choose the Git directory you want to use (default is C:\Users\[username]\git\322-project) -> Next -> Finish.
+  - e. Make sure the only branch selected is Main -> Next
+  - f. Choose the Git directory you want to use (default is C:\Users\[username]\git\322-project) -> Next -> Finish.
   
 5. To push and pull files:
   - a. In Eclipse, navigate to Window -> Show View -> Other...
