@@ -20,6 +20,8 @@ Team-04: Ryan Bowler, Jordan Colledge, Joonsik Kim, Karen Masuda, Nathan Wright
   - d. Paste the URI in the "URI" box if it's empty. Input your GitHub username under User and the token from the previous step under Password. Check off "Store in Secure Store" and hit Next.
   - e. Next -> Choose the Git directory you want to use (default is C:\Users\[username]\git\322-project) -> Next -> Finish.
   
+  Test the project to see if you're able to run it. If not, look for the "Fix Maven Dependencies Error" email, download the attached repository, then repeat Step 4.
+  
 5. To push and pull files:
   - a. In Eclipse, navigate to Window -> Show View -> Other...
   - b. Under Git, choose both Git Repositories and Git Staging, then hit Open.
