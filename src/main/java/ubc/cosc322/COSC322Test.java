@@ -27,7 +27,7 @@ public class COSC322Test extends GamePlayer{
      * The main method
      * @param args for name and passwd (current, any string would work)
      */
-    public static void main(String[] args) {				 
+    public static void main(String[] args) {
     	COSC322Test player = new COSC322Test(args[0], args[1]);
     	
     	if(player.getGameGUI() == null) {
@@ -62,9 +62,19 @@ public class COSC322Test extends GamePlayer{
     @Override
     public void onLogin() {
     	System.out.println("Congratualations!!! "
-    			+ "I am called because the server indicated that the login is test successfully");
+    			+ "I am called because the server indicated that the login is successfully");
     	System.out.println("The next step is to find a room and join it: "
     			+ "the gameClient instance created in my constructor knows how!");
+    	
+    	System.out.println("\nList of rooms:");
+    	List<sfs2x.client.entities.Room> rmList = gameClient.getRoomList();
+    	for(int i = 0; i < rmList.size(); i++)
+    	{
+    		System.out.println(rmList.get(i));
+    	}
+    	
+    	System.out.println();
+    	if(rmList.size() > 0) gameClient.joinRoom(rmList.get(0).getName());
     }
 
     @Override
@@ -74,7 +84,17 @@ public class COSC322Test extends GamePlayer{
 	
     	//For a detailed description of the message types and format, 
     	//see the method GamePlayer.handleGameMessage() in the game-client-api document. 
-    	    	
+    	
+    	try {
+    		System.out.println(msgDetails.get("game-state"));
+    		
+    		//that may look like the worst, but we don't really have a GUI, so...
+    	}
+    	catch (Exception e) {
+    		System.out.println("Error");
+    	}
+    	
+    	
     	return true;   	
     }
     
