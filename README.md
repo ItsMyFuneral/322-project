@@ -4,7 +4,7 @@
 
 Team-04: Ryan Bowler, Jordan Colledge, Joonsik Kim, Karen Masuda, Nathan Wright
 
-## Project Setup
+## Project Setup For Eclipse
 
 1. Install Eclipse and a JDK.
 
@@ -35,3 +35,25 @@ Team-04: Ryan Bowler, Jordan Colledge, Joonsik Kim, Karen Masuda, Nathan Wright
 8. To run the code: open COSC322Test.java in Eclipse, then navigate to Run -> Run Configurations. Select COSC322Test, go to Arguments, and under "Program Arguments" input the desired username and password separated by spaces. (Currently, any can be used, but this may change in future.)
   
 8. If you have any issues, contact Jordan on Discord at @nitrodog96#0886.
+
+## Project Setup For VSCode
+
+1. Install VSCode and a JDK.
+
+2. Install Git. All options can be left as their default selection. https://git-scm.com/downloads
+  - a. Open the Git CMD app
+  - b. Type git config --global user.name "*your github username*"
+  - c. Type git config --global user.email "*your github email*"
+
+3. Under the extensions tab in VSCode, install Git Extension Pack.
+
+4. Under the Source Control tab in VSCode, clone a repository
+  - a. Paste the link to the project repository
+  - b. Select where you want to store the project on your computer
+
+5. To push and pull files
+  - a. Under the Source Control tab in VSCode, click the Source Control dropdown tab after making any changes
+  - b. Hover over any edited file and click the Stage Changes button (+)
+  - c. Hover over the Source Control dropdown tab and click the checkmark to commit the changed files to the branch
+  - d. Under the Commits dropdown menu, click push (arrow pointing up) over your recently comitted changes (highlighted green)
+  - e. Hover over the Commits dropdown menu and click pull (arrow pointing down)
