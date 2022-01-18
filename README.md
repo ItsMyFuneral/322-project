@@ -25,7 +25,9 @@ Team-04: Ryan Bowler, Jordan Colledge, Joonsik Kim, Karen Masuda, Nathan Wright
   - b. Under Git, choose both Git Repositories and Git Staging, then hit Open.
   - c. To push changes: Under Git Staging, drag any Unstaged Changes down to Staged Changes, add a commit message, then push and commit.
   - d. To pull changes: Under Git Repositories, right-click 322-project and select Pull.
+
+6. Pull changes, then right-click the project -> Run As... -> Maven Install. 
   
-6. To run the code: open COSC322Test.java in Eclipse, then navigate to Run -> Run Configurations. Select COSC322Test, go to Arguments, and under "Program Arguments" input the desired username and password separated by spaces. (Currently, any can be used, but this may change in future.)
+7. To run the code: open COSC322Test.java in Eclipse, then navigate to Run -> Run Configurations. Select COSC322Test, go to Arguments, and under "Program Arguments" input the desired username and password separated by spaces. (Currently, any can be used, but this may change in future.)
   
-7. If you have any issues, contact Jordan on Discord at @nitrodog96#0886.
+8. If you have any issues, contact Jordan on Discord at @nitrodog96#0886.
