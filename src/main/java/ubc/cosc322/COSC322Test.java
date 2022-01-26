@@ -6,7 +6,8 @@ import sfs2x.client.entities.Room;
 import ygraph.ai.smartfox.games.BaseGameGUI;
 import ygraph.ai.smartfox.games.GameClient;
 import ygraph.ai.smartfox.games.GamePlayer;
-import ygraph.ai.smartfox.games.amazons.HumanPlayer;
+import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
+import ygraph.ai.smartfox.games.GameMessage;
 
 /**
  * An example illustrating how to implement a GamePlayer
@@ -29,6 +30,7 @@ public class COSC322Test extends GamePlayer{
      */
     public static void main(String[] args) {
     	COSC322Test player = new COSC322Test(args[0], args[1]);
+    	
     	
     	if(player.getGameGUI() == null) {
     		player.Go();
@@ -78,27 +80,20 @@ public class COSC322Test extends GamePlayer{
     	//For a detailed description of the message types and format, 
     	//see the method GamePlayer.handleGameMessage() in the game-client-api document. 
     	
-    	System.out.println("got here");
-    	
-    	System.out.println(messageType);
-    	
-    	if(messageType.equals("cosc322.game-state.board"))
+    	switch(messageType)
     	{
-    		System.out.println("here?");
-    		ArrayList<Integer> board = (ArrayList<Integer>) msgDetails.get("game-state");
-    		System.out.println("what about here?");
-    		this.gamegui.setGameState(board);
-    		System.out.println("or here?");
+    		case GameMessage.GAME_ACTION_MOVE:
+    			this.getGameGUI().updateGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR),
+    											  (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT),
+    											  (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.ARROW_POS));
+    			break;
+    		case GameMessage.GAME_STATE_BOARD:
+    			this.getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
+    			break;
+    		default:
+    			break;
     	}
-    	else if(messageType.equals(""))		//whatever it is for GameMessage.GAME_ACTION_MOVE 
-    	{
-    		ArrayList<Integer> cur = (ArrayList<Integer>) msgDetails.get("queen-pos-cur");
-    		ArrayList<Integer> mve = (ArrayList<Integer>) msgDetails.get("queen-pos-next");
-    		ArrayList<Integer> arr = (ArrayList<Integer>) msgDetails.get("arrow-pos");
-    		this.gamegui.updateGameState(cur,mve,arr);
-    	}
-    	
-    	return true;   	
+    	return true;
     }
     
     
