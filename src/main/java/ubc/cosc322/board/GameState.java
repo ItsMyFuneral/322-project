@@ -15,8 +15,10 @@ public class GameState {
 	public ArrayList<Arrow> arrows = new ArrayList<>();
 	public ArrayList<Queen> moves = new ArrayList<>();
 	
+	ChildFinder cf = new ChildFinder();
+	
 	//numbers for Monte-Carlo randomness
-	// use AtomicDouble in case of multithreading?
+	// figure out multithreading stuff later
 	public int numTrials;
 	public int numWins;
 	
@@ -138,6 +140,11 @@ public class GameState {
 			m.addAll(getMoves(q));
 		}
 		return m.isEmpty();
+	}
+	
+	public double getScore() {
+		if(numTrials == 0) return 0;
+		else return numWins / numTrials;
 	}
 	
 	// get all of q's mossible moves
