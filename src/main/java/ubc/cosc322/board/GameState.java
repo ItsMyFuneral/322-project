@@ -8,12 +8,17 @@ public class GameState {
 	// bunch of variables will end up going here
 	public Tile[][] board = new Tile[10][10];
 	
-	boolean ourTurn = true;
+	public boolean ourTurn = true;
 	
 	public Queen[] friends;
 	public Queen[] enemies;
 	public ArrayList<Arrow> arrows = new ArrayList<>();
 	public ArrayList<Queen> moves = new ArrayList<>();
+	
+	//numbers for Monte-Carlo randomness
+	// use AtomicDouble in case of multithreading?
+	public int numTrials;
+	public int numWins;
 	
 	public GameState(boolean isWhite) {
 		// only called when game starts
