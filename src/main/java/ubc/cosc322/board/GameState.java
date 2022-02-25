@@ -43,6 +43,43 @@ public class GameState {
 		updateBoard();
 	}
 	
+	public void moveQueen(Queen q, Arrow a)
+	{
+		addArrow(a);
+		
+		if(q.friendly)
+		{
+			for(Queen qn : friends)
+			{
+				if(qn.row == q.prevRow && qn.col == q.prevCol)	// move the queen that 'q' indicates
+					qn.move(q.row, q.col);
+			}
+		}
+		else
+		{
+			for(Queen qn : enemies)
+			{
+				if(qn.row == q.prevRow && qn.col == q.prevCol)	// move the queen that 'q' indicates
+					qn.move(q.row, q.col);
+			}
+		}
+		
+		updateBoard();
+		ourTurn = !ourTurn;
+	}
+	
+	public void randomPlay() {
+		// I dunno what this is gonna do tbh
+		// I guess something like:
+		
+		// Queen mv = moves.get((int) (Math.random() * moves.size()));
+		// ArrayList<Arrow> arrows = getArrowMoves(mv.row, mv.col, move.prevRow, mv.prevCol);
+		// Arrow a = arrow.get((int) (Math.random() * arrows.size()));
+		// mv.friendly = ourTurn;
+		
+		// moveQueen(mv, a)
+	}
+	
 	public void updateBoard() {
 		
 		// reset the board

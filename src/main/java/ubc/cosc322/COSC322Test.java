@@ -68,7 +68,7 @@ public class COSC322Test extends GamePlayer{
         	this.gamegui.setRoomInformation(this.gameClient.getRoomList()); 
         }
         
-        this.getGameClient().joinRoom(this.gameClient.getRoomList().get(1).getName());
+        this.getGameClient().joinRoom(this.gameClient.getRoomList().get(0).getName());
     }
 
     @SuppressWarnings("unchecked")
@@ -83,9 +83,7 @@ public class COSC322Test extends GamePlayer{
     	switch(messageType)
     	{
     		case GameMessage.GAME_ACTION_MOVE:
-    			this.getGameGUI().updateGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR),
-    											  (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT),
-    											  (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.ARROW_POS));
+    			this.getGameGUI().updateGameState(msgDetails);
     			break;
     		case GameMessage.GAME_STATE_BOARD:
     			this.getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));

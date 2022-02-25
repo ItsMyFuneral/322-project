@@ -5,9 +5,9 @@ import java.util.*;
 public class Queen extends Tile {
 	
 	//prev might be useful
-	int prevRow;
-	int prevCol;
-	boolean friendly;		// ours or not
+	public int prevRow;
+	public int prevCol;
+	public boolean friendly;		// ours or not
 	
 	public Queen(int row, int col)
 	{
