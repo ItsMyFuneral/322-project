@@ -4,6 +4,8 @@ import java.util.*;
 import ubc.cosc322.search.*;
 import ubc.cosc322.board.tiletypes.*;
 
+import com.google.common.util.concurrent.AtomicDouble;
+
 public class GameState {
 	// bunch of variables will end up going here
 	public Tile[][] board = new Tile[10][10];
