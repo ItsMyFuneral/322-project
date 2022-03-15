@@ -7,6 +7,8 @@ public class Main {
 	public static void main(String[] args) {
 		AmazonsPlayer player = new AmazonsPlayer("team04", "WeW1llR0ckY0u");
 		
+		System.out.println("got here");
+		
 		if(player.getGameGUI() == null) {
     		player.Go();
     	}

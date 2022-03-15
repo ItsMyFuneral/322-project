@@ -45,6 +45,7 @@ public class AmazonsPlayer extends GamePlayer {
 	{
 		this.userName = un;
 		this.password = pw;
+		this.gamegui = new BaseGameGUI(this);
 	}
 	
 	public void handleOwnMove()
@@ -62,18 +63,12 @@ public class AmazonsPlayer extends GamePlayer {
 		turn++;
 		
 		
-		ArrayList<Integer> qpC = new ArrayList<Integer>();
-		ArrayList<Integer> qpN = new ArrayList<Integer>();
-		ArrayList<Integer> arP = new ArrayList<Integer>();
-		
-		qpC.set(0, bestQ.prevRow + 1);
-		qpC.set(1, bestQ.prevCol + 1);
-		qpN.set(0, bestQ.row + 1);
-		qpN.set(1, bestQ.col + 1);
-		arP.set(0, bestA.row + 1);
-		arP.set(1, bestA.col + 1);
+		ArrayList<Integer> qpC = bestQ.oldPosition();
+		ArrayList<Integer> qpN = bestQ.position();
+		ArrayList<Integer> arP = bestA.position();
 		
 		gameClient.sendMoveMessage(qpC, qpN, arP);
+		this.gamegui.updateGameState(qpC,qpN,arP);
 		
 		bestQ.friendly = true;
 		mcts.moveQueen(bestQ, bestA);
@@ -121,6 +116,8 @@ public class AmazonsPlayer extends GamePlayer {
 	@SuppressWarnings("unchecked")
 	public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails)
 	{
+		System.out.println("got to handle a message");
+		System.out.println(messageType);
 		switch(messageType)
 		{
 			case GameMessage.GAME_ACTION_START:
