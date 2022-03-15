@@ -13,6 +13,15 @@ import ygraph.ai.smartfox.games.Amazon.GameBoard;
 import ygraph.ai.smartfox.games.amazons.AmazonsBoard;
 import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
 
+import ubc.cosc322.board.tiletypes.*;
+import ubc.cosc322.board.*;
+import ubc.cosc322.messages.*;
+import ubc.cosc322.search.*;
+
+/**
+ * For testing and demo purposes only. An GUI Amazon client for human players 
+ * @author yong.gao@ubc.ca
+ */
 public class AmazonsPlayer extends GamePlayer {
 	private GameClient gameClient = null;
 	private BaseGameGUI gamegui = null;
@@ -28,12 +37,85 @@ public class AmazonsPlayer extends GamePlayer {
 	
 	public MonteCarloTreeSearch mcts;
 	
+	AmazonsBoard gameBoard;
+	
 	public boolean isBot = false;
 	
 	public AmazonsPlayer(String un, String pw)
 	{
 		this.userName = un;
 		this.password = pw;
+	}
+	
+	public void handleOwnMove()
+	{
+		MCTSNode best = mcts.findNextMove();
+		Queen bestQ = best.getQueen();
+		Arrow bestA = best.getArrow();
+		
+		if(bestQ == null) {	//i.e. if game is over
+			if(best.board.checkStatus() == 1) System.out.println("GET THOSE FREAKING W'S BOYS");
+			else System.out.println("Mission failed. We'll get 'em next time.");
+			return;
+		}
+		
+		turn++;
+		
+		
+		ArrayList<Integer> qpC = new ArrayList<Integer>();
+		ArrayList<Integer> qpN = new ArrayList<Integer>();
+		ArrayList<Integer> arP = new ArrayList<Integer>();
+		
+		qpC.set(0, bestQ.prevRow + 1);
+		qpC.set(1, bestQ.prevCol + 1);
+		qpN.set(0, bestQ.row + 1);
+		qpN.set(1, bestQ.col + 1);
+		arP.set(0, bestA.row + 1);
+		arP.set(1, bestA.col + 1);
+		
+		gameClient.sendMoveMessage(qpC, qpN, arP);
+		
+		bestQ.friendly = true;
+		mcts.moveQueen(bestQ, bestA);
+	}
+	
+	public void handleOpponentMove(Map<String, Object> msgDetails)
+	{
+		//read info. All these unchecked casts are safe because we know what the objects are
+		ArrayList<Integer> queenCur = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR);
+		ArrayList<Integer> queenNxt = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT);
+		ArrayList<Integer> arrowPos = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.ARROW_POS);
+		
+		// create enemy move as a Queen object
+		Queen enemy = new Queen(queenNxt.get(0) - 1, queenNxt.get(1) - 1, false);
+		enemy.prevRow = queenCur.get(0) - 1;
+		enemy.prevCol = queenCur.get(1) - 1;
+		
+		turn++;
+		
+		// and make the arrow
+		Arrow a = new Arrow(arrowPos.get(0) - 1, arrowPos.get(1) - 1);
+		
+		//then update the gamestate
+		this.gamegui.updateGameState(queenCur, queenNxt, arrowPos);
+		
+		if(mcts != null) {
+			mcts.moveQueen(enemy, a);
+			
+			handleOwnMove();
+		}
+	}
+	
+	public void reset() {
+		this.mcts = null;
+	}
+	
+	public void initBot() {
+		isBot = true;
+	}
+	
+	public void initPlayer() {
+		this.Go();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -48,13 +130,19 @@ public class AmazonsPlayer extends GamePlayer {
 				mcts.isWhite = isWhite;
 				
 				// handle first move here somewhere
+				if(!isWhite) handleOwnMove();
+				
 				break;
 			case GameMessage.GAME_ACTION_MOVE:
 				// handle opponent move
+				handleOpponentMove(msgDetails);
+				
 				break;
 			case GameMessage.GAME_STATE_BOARD:
 				ArrayList<Integer> arr = (ArrayList<Integer>) msgDetails.get("game-state");
 				this.gamegui.setGameState(arr);
+				break;
+			default:
 				break;
 		}
 		return true;
@@ -80,8 +168,7 @@ public class AmazonsPlayer extends GamePlayer {
 
     @Override
     public BaseGameGUI getGameGUI() {
-        //return this.gamegui;
-        return null;
+        return this.gamegui;
     }
 
     @Override

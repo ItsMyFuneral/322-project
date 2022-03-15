@@ -85,7 +85,7 @@ public class GameState {
 		numTrials.addAndGet(trials);
 	}
 	
-	public void randomPlay() {
+	public void makeRandomPlay() {
 		
 		updateMoves();
 		
