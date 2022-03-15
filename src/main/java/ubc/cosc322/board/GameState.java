@@ -21,8 +21,8 @@ public class GameState {
 	
 	//numbers for Monte-Carlo randomness
 	// figure out multithreading stuff later
-	public int numTrials;
-	public int numWins;
+	public AtomicDouble numTrials = new AtomicDouble(0);
+	public AtomicDouble numWins = new AtomicDouble(0);
 	
 	public GameState(boolean isWhite) {
 		// only called when game starts
@@ -41,6 +41,7 @@ public class GameState {
 		}
 		
 		updateBoard();
+		updateMoves();
 	}
 	
 	public GameState(Queen[] friends, Queen[] enemies, ArrayList<Arrow> arrows, boolean ourTurn)
@@ -49,11 +50,13 @@ public class GameState {
 		this.enemies = enemies;
 		this.arrows = arrows;
 		this.ourTurn = ourTurn;
-		updateBoard();
+		
+		this.updateBoard();
 	}
 	
 	public void moveQueen(Queen q, Arrow a)
 	{
+		//adding the arrow is easy, we don't care what team it's for
 		addArrow(a);
 		
 		if(q.friendly)
@@ -77,16 +80,24 @@ public class GameState {
 		ourTurn = !ourTurn;
 	}
 	
+	public void updateMCTS(double wins, double trials) {
+		numWins.addAndGet(wins);
+		numTrials.addAndGet(trials);
+	}
+	
 	public void randomPlay() {
-		// I dunno what this is gonna do tbh
-		// I guess something like:
 		
-		// Queen mv = moves.get((int) (Math.random() * moves.size()));
-		// ArrayList<Arrow> arrows = getArrowMoves(mv.row, mv.col, move.prevRow, mv.prevCol);
-		// Arrow a = arrow.get((int) (Math.random() * arrows.size()));
-		// mv.friendly = ourTurn;
+		updateMoves();
 		
-		// moveQueen(mv, a)
+		//pick random queen move
+		Queen m = moves.get((int)(Math.random() * moves.size()));
+		//then pick random arrow from list of all of that queen's arrows
+		ArrayList<Arrow> possArrows = getArrowMoves(m.row, m.col, m.prevRow, m.prevCol);
+		Arrow a = arrows.get((int)(Math.random() * moves.size()));
+		m.friendly = ourTurn;
+		
+		//execute the move
+		moveQueen(m, a);
 	}
 	
 	public void updateBoard() {
@@ -135,6 +146,7 @@ public class GameState {
 		return m.isEmpty();
 	}
 	
+	//check if we lose
 	public boolean isEnemyGoal() {
 		ArrayList<Queen> m = new ArrayList<>();
 		for(Queen q : friends) {
@@ -145,8 +157,17 @@ public class GameState {
 	}
 	
 	public double getScore() {
-		if(numTrials == 0) return 0;
-		else return numWins / numTrials;
+		double trials = numTrials.get();
+		if(trials != 0)
+			return (double)numWins.get() / trials;
+		else
+			return trials;
+	}
+	
+	public double checkStatus() {
+		if(isFriendGoal()) return 1;
+		if(isEnemyGoal()) return 0;
+		return 0.5;
 	}
 	
 	// get all of q's mossible moves
@@ -154,17 +175,115 @@ public class GameState {
 	{
 		ArrayList<Queen> mvs = new ArrayList<Queen>();
 		
-		/* add all moves:
-		 * up
-		 * down
-		 * left
-		 * right
-		 * diag NW
-		 * diag NE
-		 * diag SW
-		 * diag SE
-		 * 
-		 */
+		for(int i = 1; q.col - i >= 0; i++)
+        {
+            if(board[q.row][q.col - i] == null) {
+                Queen move = new Queen(q.row, q.col - i);
+                move.prevCol = q.col;
+                move.prevRow = q.row;
+                mvs.add(move);
+            }
+            else
+                break;
+        }
+
+        // Get all moves right
+        for(int i = 1; q.col + i <= 9; i++)
+        {
+            if(board[q.row][q.col + i] == null)
+            {
+                Queen move = new Queen(q.row, q.col + i);
+                move.prevCol = q.col;
+                move.prevRow = q.row;
+                mvs.add(move);
+            }
+            else
+                break;
+        }
+
+        // Get all moves up
+        for(int i = 1; q.row - i >= 0; i++)
+        {
+            if(board[q.row - i][q.col] == null)
+            {
+                Queen move = new Queen(q.row - i, q.col);
+                move.prevCol = q.col;
+                move.prevRow = q.row;
+                mvs.add(move);
+            }
+            else
+                break;
+        }
+
+        // Get all moves down
+        for(int i = 1; q.row + i <= 9; i++)
+        {
+            if(board[q.row + i][q.col] == null)
+            {
+                Queen move = new Queen(q.row + i, q.col);
+                move.prevCol = q.col;
+                move.prevRow = q.row;
+                mvs.add(move);
+            }
+            else
+                break;
+        }
+
+        // Get all moves diag left/up
+        for(int i = 1; q.col - i >= 0 && q.row - i >= 0; i++)
+        {
+            if(board[q.row - i][q.col - i] == null)
+            {
+                Queen move = new Queen(q.row - i, q.col - i);
+                move.prevCol = q.col;
+                move.prevRow = q.row;
+                mvs.add(move);
+            }
+            else
+                break;
+        }
+
+        // Get all moves diag left/down
+        for(int i = 1; q.col - i >= 0 && q.row + i <= 9; i++)
+        {
+            if(board[q.row + i][q.col - i] == null)
+            {
+                Queen move = new Queen(q.row + i, q.col - i);
+                move.prevCol = q.col;
+                move.prevRow = q.row;
+                mvs.add(move);
+            }
+            else
+                break;
+        }
+
+        // Get all moves diag right/down
+        for(int i = 1; q.col + i <= 9 && q.row + i <= 9; i++)
+        {
+            if(board[q.row + i][q.col + i] == null)
+            {
+                Queen move = new Queen(q.row + i, q.col + i);
+                move.prevCol = q.col;
+                move.prevRow = q.row;
+                mvs.add(move);
+            }
+            else
+                break;
+        }
+
+        // Get all moves diag right/up
+        for(int i = 1; q.col + i <= 9 && q.row - i >= 0; i++)
+        {
+            if(board[q.row - i][q.col + i] == null)
+            {
+                Queen move = new Queen(q.row - i, q.col + i);
+                move.prevCol = q.col;
+                move.prevRow = q.row;
+                mvs.add(move);
+            }
+            else
+                break;
+        }
 		
 		return mvs;
 	}
@@ -173,17 +292,77 @@ public class GameState {
 	{
 		ArrayList<Arrow> mvs = new ArrayList<Arrow>();
 		
-		/* add all moves:
-		 * up
-		 * down
-		 * left
-		 * right
-		 * diag NW
-		 * diag NE
-		 * diag SW
-		 * diag SE
-		 * 
-		 */
+		// Get all moves left
+        for(int i = 1; col - i >= 0; i++)
+        {
+            if(board[row][col - i] == null || (row == oldRow && col - i == oldCol))
+                mvs.add(new Arrow(row, col - i));
+            else
+                break;
+        }
+
+        // Get all moves right
+        for(int i = 1; col + i <= 9; i++)
+        {
+            if(board[row][col + i] == null || (row == oldRow && col + i == oldCol))
+                mvs.add(new Arrow(row, col + i));
+            else
+                break;
+        }
+
+        // Get all moves down
+        for(int i = 1; row - i >= 0; i++)
+        {
+            if(board[row - i][col] == null || (row - i == oldRow && col == oldCol))
+                mvs.add(new Arrow(row - i, col));
+            else
+                break;
+        }
+
+        // Get all moves up
+        for(int i = 1; row + i <= 9; i++)
+        {
+            if(board[row + i][col] == null || (row + i == oldRow && col == oldCol))
+                mvs.add(new Arrow(row + i, col));
+            else
+                break;
+        }
+
+        // Get all moves diag NW
+        for(int i = 1; col - i >= 0 && row - i >= 0; i++)
+        {
+            if(board[row - i][col - i] == null || (row - i == oldRow && col - i == oldCol))
+                mvs.add(new Arrow(row - i, col - i));
+            else
+                break;
+        }
+
+        // Get all moves diag SW
+        for(int i = 1; col - i >= 0 && row + i <= 9; i++)
+        {
+            if(board[row + i][col - i] == null || (row + i == oldRow && col - i == oldCol))
+                mvs.add(new Arrow(row + i, col - i));
+            else
+                break;
+        }
+
+        // Get all moves diag SE
+        for(int i = 1; col + i <= 9 && row + i <= 9; i++)
+        {
+            if(board[row + i][col + i] == null || (row + i == oldRow && col + i == oldCol))
+                mvs.add(new Arrow(row + i, col + i));
+            else
+                break;
+        }
+
+        // Get all moves diag NE
+        for(int i = 1; col + i <= 9 && row - i >= 0; i++)
+        {
+            if(board[row - i][col + i] == null || (row - i == oldRow && col + i == oldCol))
+                mvs.add(new Arrow(row - i, col + i));
+            else
+                break;
+        }
 		
 		return mvs;
 	}
