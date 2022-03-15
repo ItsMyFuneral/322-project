@@ -89,7 +89,8 @@ public class GameState {
 		updateMoves();
 		
 		//pick random queen move
-		Queen m = moves.get((int)(Math.random() * moves.size()));
+		int randM = (int) (Math.random() * this.moves.size());
+		Queen m = this.moves.get((int)(Math.random() * this.moves.size()));
 		//then pick random arrow from list of all of that queen's arrows
 		ArrayList<Arrow> possArrows = getArrowMoves(m.row, m.col, m.prevRow, m.prevCol);
 		Arrow a = possArrows.get((int)(Math.random() * possArrows.size()));

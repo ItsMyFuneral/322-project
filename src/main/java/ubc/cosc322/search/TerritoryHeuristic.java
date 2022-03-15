@@ -24,9 +24,9 @@ public class TerritoryHeuristic {
 				dists[i][j] = new ShortestMove();
 			}
 		}
-		
-		setDistances(true);
-		setDistances(false);
+
+		setDist(false);
+		setDist(true);
 		
 		//set up variables to do an average of the evaluations
 		double sum = 0;
@@ -49,7 +49,7 @@ public class TerritoryHeuristic {
 		return 0.5 + Math.pow(0.5, dist.f) - Math.pow(0.5, dist.e);
 	}
 	
-	public void setDistances(boolean fr) {
+	public void setDist(boolean fr) {
 		Queen[] queens;
 		if(fr) queens = state.friends;
 		else queens = state.enemies;
@@ -79,6 +79,7 @@ public class TerritoryHeuristic {
 					{
 						// with all of dists[] set up as max integer value, this sets all dists.f and dists.e values
 						// to 1 if the given player can reach them within numMoves turns
+						
 						iter.remove();	//removes most recent item returned by next()
 					}
 					else
@@ -87,6 +88,7 @@ public class TerritoryHeuristic {
 						else dists[mv.row][mv.col].e = numMoves;
 					}
 				}
+				newQ.addAll(moves);
 			}
 			numMoves++;
 			queue = newQ;

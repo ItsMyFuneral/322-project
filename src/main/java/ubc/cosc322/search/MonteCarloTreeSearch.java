@@ -34,7 +34,7 @@ class UCT {
 	}
 }
 
-// for multithreading later
+// for multithreading
 class SimWorker extends Thread {
 	MCTSNode rootNode;
 	long endTime;

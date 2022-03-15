@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import ubc.cosc322.board.*;
 import ubc.cosc322.board.tiletypes.*;
-import ubc.cosc322.search.*;
 
 // The idea of a "Dead monarch heuristic" was suggested by a previous student in the class, Jordan Ribbink.
 // He gave me a general description of the idea and its uses, and I implemented it from there.
@@ -14,7 +13,7 @@ public class DeadMonarchHeuristic {
     public double calc(GameState state) {
         this.state = state;
 
-        return getLiveQueens(true) - (double)getLiveQueens(false);
+        return (double) getLiveQueens(true) - (double)getLiveQueens(false);
     }
 
     private int getLiveQueens(boolean friendly) {
@@ -38,9 +37,8 @@ public class DeadMonarchHeuristic {
 
         frontier.addAll(state.getMoves(q));
 
+        //if queen has one or fewer moves
         boolean oneMove = frontier.size() <= 1;
-
-        // Could be looped starting here
         ArrayList<Queen> newFrontier = new ArrayList<>();
 
         for(Queen move: frontier) {
@@ -52,7 +50,6 @@ public class DeadMonarchHeuristic {
         
         frontier = newFrontier;
         visited.addAll(frontier);
-        //loop woudl end here
         
 
         return frontier.isEmpty() && oneMove;
