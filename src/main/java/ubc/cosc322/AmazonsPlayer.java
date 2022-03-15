@@ -150,6 +150,7 @@ public class AmazonsPlayer extends GamePlayer {
         this.userName = gameClient.getUserName(); 
         if(this.gamegui != null) { 
         	this.gamegui.setRoomInformation(this.gameClient.getRoomList()); 
+        	this.gameClient.joinRoom(this.gameClient.getRoomList().get(0).getName());
         }
     }
 	

@@ -49,9 +49,14 @@ class Worker extends Thread {
 	}
 	public void run() {
 		while(System.nanoTime() < endTime) {
-			MCTSNode n = mcts.selectPromising(rootNode);
-			double result = mcts.randomPlayout(n, heur, dmh);
-			mcts.backPropagate(n, result);
+			try {
+				MCTSNode n = mcts.selectPromising(rootNode);
+				double result = mcts.randomPlayout(n, heur, dmh);
+				mcts.backPropagate(n, result);
+			}
+			catch(Exception e) {
+				System.out.println("error");
+			}
 		}
 	}
 }
