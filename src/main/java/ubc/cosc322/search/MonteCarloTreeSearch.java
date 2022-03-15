@@ -24,8 +24,10 @@ class UCT {
 		//add grandchildren, i.e. states after one of our moves and one of pone's, to list of nodes
 		for(MCTSNode ch : node.getChildren())
 		{
+			ch.setChildren();
 			nodes.addAll(ch.getChildren());
 		}
+		
 		
 		return Collections.max(nodes,
 				Comparator.comparing(c -> uctValue(parentTrials, c.board.numWins.get(), c.board.numTrials.get())));
@@ -33,7 +35,7 @@ class UCT {
 }
 
 // for multithreading later
-class Worker extends Thread {
+class SimWorker extends Thread {
 	MCTSNode rootNode;
 	long endTime;
 	MonteCarloTreeSearch mcts;
@@ -41,7 +43,7 @@ class Worker extends Thread {
 	TerritoryHeuristic heur = new TerritoryHeuristic();
 	DeadMonarchHeuristic dmh = new DeadMonarchHeuristic();
 	
-	public Worker(MCTSNode root, long endTime, MonteCarloTreeSearch mcts)
+	public SimWorker(MCTSNode root, long endTime, MonteCarloTreeSearch mcts)
 	{
 		this.rootNode = root;
 		this.endTime = endTime;
@@ -49,17 +51,12 @@ class Worker extends Thread {
 	}
 	public void run() {
 		while(System.nanoTime() < endTime) {
-			try {
-				MCTSNode n = mcts.selectPromising(rootNode);
-				double result = mcts.randomPlayout(n, heur, dmh);
-				mcts.backPropagate(n, result);
-			}
-			catch(Exception e) {
-				System.out.println(e);
-				MCTSNode n = mcts.selectPromising(rootNode);
-				double result = mcts.randomPlayout(n, heur, dmh);
-				mcts.backPropagate(n, result);
-			}
+			System.out.println("selecting");
+			MCTSNode n = mcts.selectPromising(rootNode);
+			System.out.println("playing");
+			double result = mcts.randomPlayout(n, heur, dmh);
+			System.out.println("propagating");
+			mcts.backPropagate(n, result);
 		}
 	}
 }
@@ -68,8 +65,7 @@ public class MonteCarloTreeSearch {
 	public MCTSNode rootNode;
 	public boolean isWhite;
 	public int playouts = 0;
-	//something about heuristic in here? idk
-	private double heuristic = 0;
+	private double heuristicValue = 0;
 	
 	public ArrayList<MCTSState> stateUpdates = new ArrayList<>();
 	
@@ -90,22 +86,30 @@ public class MonteCarloTreeSearch {
 	}
 	
 	public void performSearch() {
-		// do something in here, idk
-		this.heuristic = (new TerritoryHeuristic()).calc(rootNode.board);
+		this.heuristicValue = (new TerritoryHeuristic()).calc(rootNode.board);
 		
 		rootNode.setChildren();
 		
 		long start = System.nanoTime(); //now
-		long end = start + ((long) (MAX_TIME + TimeUnit.SECONDS.toNanos(1)));
+		long end = start;
+		end += (long) (MAX_TIME + TimeUnit.SECONDS.toNanos(1));
 		playouts = 0;
 		
-		ArrayList<Worker> workers = new ArrayList<>();
+		ArrayList<SimWorker> workers = new ArrayList<>();
 		
 		for(int i = 0; i < NUM_THREADS; i++)
 		{
-			Worker w = new Worker(rootNode, end, this);
-			w.run();
+			SimWorker w = new SimWorker(rootNode, end, this);
+			System.out.println("worker made");
 			workers.add(w);
+			System.out.println("added to list");
+		}
+		
+		for(int j = 0; j < workers.size(); j++)
+		{
+			SimWorker w = workers.get(j);
+			w.start();
+			System.out.println("running");
 		}
 		
 		boolean running = true;
@@ -162,7 +166,12 @@ public class MonteCarloTreeSearch {
 	public MCTSNode selectPromising(MCTSNode parent)
 	{
 		MCTSNode n = parent;
-		while(n.getChildren().size() != 0)
+		ArrayList<MCTSNode> grandchildren = new ArrayList<>();
+		for(int i = 0; i < n.getChildren().size(); i++)
+		{
+			grandchildren.addAll(n.getChildren().get(i).getChildren());
+		}
+		while(grandchildren.size() != 0)
 			n = UCT.findBestNodeUCT(n);
 		
 		return n;
@@ -192,7 +201,7 @@ public class MonteCarloTreeSearch {
 		boolean isBlunder = dmh.isBlunder(st);
 		
 		// make sure we improve AND that the move isn't a blunder
-		boolean approved = dmhVal > heuristic && !isBlunder;
+		boolean approved = dmhVal > this.heuristicValue && !isBlunder;
 		
 		int turns = 0;
 		while(status == 0.5 && turns < 11)

@@ -50,6 +50,7 @@ public class AmazonsPlayer extends GamePlayer {
 	
 	public void handleOwnMove()
 	{
+		turn++;
 		MCTSNode best = mcts.findNextMove();
 		Queen bestQ = best.getQueen();
 		Arrow bestA = best.getArrow();
@@ -59,8 +60,6 @@ public class AmazonsPlayer extends GamePlayer {
 			else System.out.println("Mission failed. We'll get 'em next time.");
 			return;
 		}
-		
-		turn++;
 		
 		
 		ArrayList<Integer> qpC = bestQ.oldPosition();
@@ -125,6 +124,7 @@ public class AmazonsPlayer extends GamePlayer {
 				GameState board = new GameState(isWhite);
 				mcts = new MonteCarloTreeSearch(new MCTSNode(board));
 				mcts.isWhite = isWhite;
+				System.out.println("isWhite: " + isWhite);
 				
 				// handle first move here somewhere
 				if(!isWhite) handleOwnMove();
@@ -150,7 +150,6 @@ public class AmazonsPlayer extends GamePlayer {
         this.userName = gameClient.getUserName(); 
         if(this.gamegui != null) { 
         	this.gamegui.setRoomInformation(this.gameClient.getRoomList()); 
-        	this.gameClient.joinRoom(this.gameClient.getRoomList().get(0).getName());
         }
     }
 	

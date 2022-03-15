@@ -93,7 +93,7 @@ public class GameState {
 		Queen m = moves.get((int)(Math.random() * moves.size()));
 		//then pick random arrow from list of all of that queen's arrows
 		ArrayList<Arrow> possArrows = getArrowMoves(m.row, m.col, m.prevRow, m.prevCol);
-		Arrow a = arrows.get((int)(Math.random() * moves.size()));
+		Arrow a = possArrows.get((int)(Math.random() * arrows.size()));
 		m.friendly = ourTurn;
 		
 		//execute the move

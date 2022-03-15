@@ -5,9 +5,7 @@ import ygraph.ai.smartfox.games.amazons.HumanPlayer;
 
 public class Main {
 	public static void main(String[] args) {
-		AmazonsPlayer player = new AmazonsPlayer("test1", "WeW1llR0ckY0u");
-		
-		System.out.println("got here");
+		AmazonsPlayer player = new AmazonsPlayer("team04", "WeW1llR0ckY0u");
 		
 		if(player.getGameGUI() == null) {
     		player.Go();
