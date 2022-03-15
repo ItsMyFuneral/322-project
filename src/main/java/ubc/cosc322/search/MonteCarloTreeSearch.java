@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import ubc.cosc322.board.tiletypes.*;
-import ubc.cosc322.messages.*;
 import ubc.cosc322.board.*;
 
 // UCT: Upper Confidence bound applied to Trees. Relevant for MCTS, improves search.
@@ -66,8 +65,6 @@ public class MonteCarloTreeSearch {
 	public boolean isWhite;
 	public int playouts = 0;
 	private double heuristicValue = 0;
-	
-	public ArrayList<MCTSState> stateUpdates = new ArrayList<>();
 	
 	//multithreading config stuff
 	final double MAX_TIME_DEFAULT = 29.5;
@@ -136,24 +133,11 @@ public class MonteCarloTreeSearch {
 			Queen q = ch.getQueen();
 			Arrow a = ch.getArrow();
 			
-			for(MCTSState u : stateUpdates)
-			{
-				if(u.q.friendly == q.friendly && u.q.col == q.col && u.q.row == q.row &&
-						u.q.prevRow == q.prevRow && u.q.prevCol == q.prevCol &&
-						u.a.row == a.row && u.a.col == a.row)
-				{
-					ch.board.updateMCTS(u.w, u.t);
-					rootNode.board.updateMCTS(u.w, u.t);
-				}
-			}
-			
 			playouts += ch.board.numTrials.get();
 			
 			if(winnerNode == null || ch.board.getScore() > winnerNode.board.getScore())
 				winnerNode = ch;
 		}
-		
-		stateUpdates.clear();
 		
 		return winnerNode;
 	}
