@@ -12,7 +12,7 @@ import ubc.cosc322.board.*;
 // sqrt(2) is just the default, apparently? I remember it coming up in the slides.
 class UCT {
 	public static double uctValue(double totalTrials, double nodeWinScore, double nodeTrials) {
-		if(nodeTrials == 0) { return Double.MAX_VALUE; }
+		if(nodeTrials == 0) return Double.MAX_VALUE;		//PRIORITIZE FIRST TRIAL
 		return ((double) nodeWinScore / (double) nodeTrials) + 
 				Math.sqrt(2) * Math.sqrt(Math.log(totalTrials) / (double) nodeTrials);
 	}
@@ -55,7 +55,10 @@ class Worker extends Thread {
 				mcts.backPropagate(n, result);
 			}
 			catch(Exception e) {
-				System.out.println("error");
+				System.out.println(e);
+				MCTSNode n = mcts.selectPromising(rootNode);
+				double result = mcts.randomPlayout(n, heur, dmh);
+				mcts.backPropagate(n, result);
 			}
 		}
 	}
@@ -101,7 +104,7 @@ public class MonteCarloTreeSearch {
 		for(int i = 0; i < NUM_THREADS; i++)
 		{
 			Worker w = new Worker(rootNode, end, this);
-			w.start();
+			w.run();
 			workers.add(w);
 		}
 		
