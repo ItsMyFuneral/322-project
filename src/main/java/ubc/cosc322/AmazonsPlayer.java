@@ -9,14 +9,10 @@ import ygraph.ai.smartfox.games.BaseGameGUI;
 import ygraph.ai.smartfox.games.GameClient;
 import ygraph.ai.smartfox.games.GameMessage;
 import ygraph.ai.smartfox.games.GamePlayer;
-import ygraph.ai.smartfox.games.Amazon.GameBoard;
 import ygraph.ai.smartfox.games.amazons.AmazonsBoard;
 import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
 
 import ubc.cosc322.board.tiletypes.*;
-import ubc.cosc322.board.*;
-import ubc.cosc322.search.*;
-
 /**
  * For testing and demo purposes only. An GUI Amazon client for human players 
  * @author yong.gao@ubc.ca

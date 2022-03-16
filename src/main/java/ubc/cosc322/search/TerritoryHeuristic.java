@@ -2,7 +2,6 @@ package ubc.cosc322.search;
 
 import java.util.*;
 
-import ubc.cosc322.board.GameState;
 import ubc.cosc322.board.tiletypes.*;
 
 class ShortestMove {

@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import ubc.cosc322.board.tiletypes.*;
-import ubc.cosc322.board.*;
 
 // UCT: Upper Confidence bound applied to Trees. Relevant for MCTS, improves search.
 // Doesn't ignore less-played nodes but focuses on more promising ones.
@@ -18,17 +17,8 @@ class UCT {
 	
 	public static MCTSNode findBestNodeUCT(MCTSNode node) {
 		double parentTrials = node.board.numTrials.get();
-		ArrayList<MCTSNode> nodes = new ArrayList<>();
 		
-		//add grandchildren, i.e. states after one of our moves and one of pone's, to list of nodes
-		for(MCTSNode ch : node.getChildren())
-		{
-			ch.setChildren();
-			nodes.addAll(ch.getChildren());
-		}
-		
-		
-		return Collections.max(nodes,
+		return Collections.max(node.getChildren(),
 				Comparator.comparing(c -> uctValue(parentTrials, c.board.numWins.get(), c.board.numTrials.get())));
 	}
 }
@@ -83,7 +73,7 @@ public class MonteCarloTreeSearch {
 	}
 	
 	public void performSearch() {
-		this.heuristicValue = (new TerritoryHeuristic()).calc(rootNode.board);
+		this.heuristicValue = (new DeadMonarchHeuristic()).calc(rootNode.board);
 		
 		rootNode.setChildren();
 		
@@ -122,14 +112,12 @@ public class MonteCarloTreeSearch {
 		
 		rootNode.board.numTrials.set(0);
 		rootNode.board.numWins.set(0);
-		performSearch();
+		performSearch(true);
 		
 		MCTSNode winnerNode = null;
-		
 		//iterate through children
 		for(MCTSNode ch : rootNode.getChildren())
 		{
-			//get 
 			Queen q = ch.getQueen();
 			Arrow a = ch.getArrow();
 			
@@ -149,16 +137,7 @@ public class MonteCarloTreeSearch {
 	
 	public MCTSNode selectPromising(MCTSNode parent)
 	{
-		MCTSNode n = parent;
-		ArrayList<MCTSNode> grandchildren = new ArrayList<>();
-		for(int i = 0; i < n.getChildren().size(); i++)
-		{
-			grandchildren.addAll(n.getChildren().get(i).getChildren());
-		}
-		while(grandchildren.size() != 0)
-			n = UCT.findBestNodeUCT(n);
-		
-		return n;
+		return UCT.findBestNodeUCT(parent);
 	}
 	
 	public void backPropagate(MCTSNode nodeExp, double result)
@@ -175,9 +154,8 @@ public class MonteCarloTreeSearch {
 	
 	public double randomPlayout(MCTSNode n, TerritoryHeuristic h, DeadMonarchHeuristic dmh)
 	{
-		ChildFinder cf = new ChildFinder();
-		MCTSNode temp = new MCTSNode(cf.cloneState(n.board));	//wish this could be n.state instead, but too late now
-		GameState st = temp.board;
+		MCTSNode temp = new MCTSNode(new ChildFinder().cloneState(n.board));
+		GameState st = temp.board;		//wish this could be n.state instead, but too late now
 		
 		double status = st.status();
 		double dmhVal = dmh.calc(st);

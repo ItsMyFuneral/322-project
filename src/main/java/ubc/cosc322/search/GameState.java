@@ -1,7 +1,6 @@
-package ubc.cosc322.board;
+package ubc.cosc322.search;
 
 import java.util.*;
-import ubc.cosc322.search.*;
 import ubc.cosc322.board.tiletypes.*;
 
 import com.google.common.util.concurrent.AtomicDouble;
@@ -19,8 +18,8 @@ public class GameState {
 	
 	ChildFinder cf = new ChildFinder();
 	
-	//numbers for Monte-Carlo randomness
-	// figure out multithreading stuff later
+	// numbers for Monte-Carlo randomness
+	// AtomicDoubles for multithreading
 	public AtomicDouble numTrials = new AtomicDouble(0);
 	public AtomicDouble numWins = new AtomicDouble(0);
 	
