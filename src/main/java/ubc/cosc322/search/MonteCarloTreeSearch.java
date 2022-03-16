@@ -18,6 +18,7 @@ class UCT {
 	public static MCTSNode findBestNodeUCT(MCTSNode node) {
 		double parentTrials = node.board.numTrials.get();
 		
+		// return best UCT value.
 		return Collections.max(node.getChildren(),
 				Comparator.comparing(c -> uctValue(parentTrials, c.board.numWins.get(), c.board.numTrials.get())));
 	}
@@ -68,7 +69,7 @@ public class MonteCarloTreeSearch {
 	
 	public void performSearch(boolean isBot)
 	{
-		if(isBot) MAX_TIME = MAX_TIME_DEFAULT - 1;
+		if(isBot) MAX_TIME = MAX_TIME_DEFAULT - 1;	//allow an extra second
 		performSearch();
 	}
 	
