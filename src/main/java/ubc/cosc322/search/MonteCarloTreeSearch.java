@@ -80,7 +80,7 @@ public class MonteCarloTreeSearch {
 		
 		long start = System.nanoTime(); //now
 		long end = start;
-		end += (long) (MAX_TIME + TimeUnit.SECONDS.toNanos(1));
+		end += (long) (MAX_TIME * TimeUnit.SECONDS.toNanos(1));
 		playouts = 0;
 		
 		ArrayList<SimWorker> workers = new ArrayList<>();
