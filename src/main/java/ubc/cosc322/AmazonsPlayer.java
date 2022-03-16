@@ -56,16 +56,20 @@ public class AmazonsPlayer extends GamePlayer {
 			return;
 		}
 		
+
+		bestQ.friendly = true;
+		mcts.moveQueen(bestQ, bestA);
 		
 		ArrayList<Integer> qpC = bestQ.oldPosition();
 		ArrayList<Integer> qpN = bestQ.position();
 		ArrayList<Integer> arP = bestA.position();
 		
+		System.out.println("cur: " + qpC);
+		System.out.println("new: " + qpN);
+		System.out.println("arrow: " + arP);
+		
 		gameClient.sendMoveMessage(qpC, qpN, arP);
 		this.gamegui.updateGameState(qpC,qpN,arP);
-		
-		bestQ.friendly = true;
-		mcts.moveQueen(bestQ, bestA);
 	}
 	
 	public void handleOpponentMove(Map<String, Object> msgDetails)
@@ -110,8 +114,6 @@ public class AmazonsPlayer extends GamePlayer {
 	@SuppressWarnings("unchecked")
 	public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails)
 	{
-		System.out.println("got to handle a message");
-		System.out.println(messageType);
 		switch(messageType)
 		{
 			case GameMessage.GAME_ACTION_START:
@@ -121,7 +123,7 @@ public class AmazonsPlayer extends GamePlayer {
 				mcts.isWhite = isWhite;
 				System.out.println("isWhite: " + isWhite);
 				
-				// handle first move here somewhere
+				// apparently black starts. alright.
 				if(!isWhite) handleOwnMove();
 				
 				break;
@@ -135,6 +137,7 @@ public class AmazonsPlayer extends GamePlayer {
 				this.gamegui.setGameState(arr);
 				break;
 			default:
+				System.out.println(msgDetails);
 				break;
 		}
 		return true;

@@ -41,11 +41,8 @@ class SimWorker extends Thread {
 	}
 	public void run() {
 		while(System.nanoTime() < endTime) {
-			System.out.println("selecting");
 			MCTSNode n = mcts.selectPromising(rootNode);
-			System.out.println("playing");
 			double result = mcts.randomPlayout(n, heur, dmh);
-			System.out.println("propagating");
 			mcts.backPropagate(n, result);
 		}
 	}
@@ -80,7 +77,7 @@ public class MonteCarloTreeSearch {
 		
 		long start = System.nanoTime(); //now
 		long end = start;
-		end += (long) (MAX_TIME * TimeUnit.SECONDS.toNanos(1));
+		end += (long) ((MAX_TIME) * TimeUnit.SECONDS.toNanos(1));
 		playouts = 0;
 		
 		ArrayList<SimWorker> workers = new ArrayList<>();
@@ -88,16 +85,13 @@ public class MonteCarloTreeSearch {
 		for(int i = 0; i < NUM_THREADS; i++)
 		{
 			SimWorker w = new SimWorker(rootNode, end, this);
-			System.out.println("worker made");
 			workers.add(w);
-			System.out.println("added to list");
 		}
 		
 		for(int j = 0; j < workers.size(); j++)
 		{
 			SimWorker w = workers.get(j);
 			w.start();
-			System.out.println("running");
 		}
 		
 		boolean running = true;
@@ -113,7 +107,7 @@ public class MonteCarloTreeSearch {
 		
 		rootNode.board.numTrials.set(0);
 		rootNode.board.numWins.set(0);
-		performSearch(true);
+		performSearch();
 		
 		MCTSNode winnerNode = null;
 		//iterate through children

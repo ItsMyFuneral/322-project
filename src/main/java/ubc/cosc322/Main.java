@@ -1,7 +1,6 @@
 package ubc.cosc322;
 
 import ygraph.ai.smartfox.games.BaseGameGUI;
-import ygraph.ai.smartfox.games.amazons.HumanPlayer;
 
 public class Main {
 	public static void main(String[] args) {
