@@ -31,7 +31,7 @@ class SimWorker extends Thread {
 	MonteCarloTreeSearch mcts;
 	
 	TerritoryHeuristic heur = new TerritoryHeuristic();
-	DeadMonarchHeuristic dmh = new DeadMonarchHeuristic();
+	KeepYourselfAliveHeuristic queenH = new KeepYourselfAliveHeuristic();
 	
 	public SimWorker(MCTSNode root, long endTime, MonteCarloTreeSearch mcts)
 	{
@@ -42,7 +42,7 @@ class SimWorker extends Thread {
 	public void run() {
 		while(System.nanoTime() < endTime) {
 			MCTSNode n = mcts.selectPromising(rootNode);
-			double result = mcts.randomPlayout(n, heur, dmh);
+			double result = mcts.randomPlayout(n, heur, queenH);
 			mcts.backPropagate(n, result);
 		}
 	}
@@ -71,7 +71,7 @@ public class MonteCarloTreeSearch {
 	}
 	
 	public void performSearch() {
-		this.heuristicValue = (new DeadMonarchHeuristic()).calc(rootNode.board);
+		this.heuristicValue = (new KeepYourselfAliveHeuristic()).calc(rootNode.board);
 		
 		rootNode.setChildren();
 		
@@ -147,18 +147,18 @@ public class MonteCarloTreeSearch {
 		}
 	}
 	
-	public double randomPlayout(MCTSNode n, TerritoryHeuristic h, DeadMonarchHeuristic dmh)
+	public double randomPlayout(MCTSNode n, TerritoryHeuristic h, KeepYourselfAliveHeuristic queenH)
 	{
 		MCTSNode temp = new MCTSNode(new ChildFinder().cloneState(n.board));
 		GameState st = temp.board;		//wish this could be n.state instead, but too late now
 		
 		double status = st.status();
-		double dmhVal = dmh.calc(st);
+		double queenHVal = queenH.calc(st);
 		
-		boolean isBlunder = dmh.isBlunder(st);
+		boolean isBlunder = queenH.isBlunder(st);
 		
 		// make sure we improve AND that the move isn't a blunder
-		boolean approved = dmhVal > this.heuristicValue && !isBlunder;
+		boolean approved = queenHVal > this.heuristicValue && !isBlunder;
 		
 		int turns = 0;
 		while(status == 0.5 && turns < 11)

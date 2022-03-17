@@ -5,9 +5,15 @@ import java.util.ArrayList;
 import ubc.cosc322.board.*;
 import ubc.cosc322.board.tiletypes.*;
 
-// The idea of a "Dead monarch heuristic" was suggested by a previous student in the class, Jordan Ribbink.
-// He gave me a general description of the idea and its uses, and I implemented it from there.
-public class DeadMonarchHeuristic {
+// The idea for this heuristic came from a student in the previous year's class, Jordan Ribbink.
+// He basically just suggested the idea of a heuristic based on the number of queens that are alive,
+// compared to the opponent's. (It also hails from my original idea of a heuristic based on the number
+// of moves available to each queen, which would also be fair, but feels unnecessary.)
+// I implemented this from there.
+
+// Yes, I made the name of the class a Queen heuristic.
+
+public class KeepYourselfAliveHeuristic {
     GameState state;
 
     public double calc(GameState state) {
