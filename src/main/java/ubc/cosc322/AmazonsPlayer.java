@@ -123,7 +123,7 @@ public class AmazonsPlayer extends GamePlayer {
 				mcts.isWhite = isWhite;
 				System.out.println("isWhite: " + isWhite);
 				
-				// apparently black starts. alright.
+				// edited: white starts now, nice
 				if(isWhite) handleOwnMove();
 				
 				break;
