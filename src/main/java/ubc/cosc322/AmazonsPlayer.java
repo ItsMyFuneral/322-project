@@ -124,7 +124,7 @@ public class AmazonsPlayer extends GamePlayer {
 				System.out.println("isWhite: " + isWhite);
 				
 				// apparently black starts. alright.
-				if(!isWhite) handleOwnMove();
+				if(isWhite) handleOwnMove();
 				
 				break;
 			case GameMessage.GAME_ACTION_MOVE:
