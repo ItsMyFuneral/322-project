@@ -27,7 +27,7 @@ public class GameState {
 		// only called when game starts
 		
 		// black starts. remove ! if white starts but pretty sure black starts.
-		ourTurn = !isWhite;
+		ourTurn = isWhite;
 		
 		if(!isWhite) {
 			friends = new Queen[] { new Queen(6,0,true), new Queen(6,9,true), new Queen(9,3,true), new Queen(9,6,true) };
