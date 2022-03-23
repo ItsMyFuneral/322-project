@@ -92,6 +92,7 @@ public class AmazonsPlayer extends GamePlayer {
 		//then update the gamestate
 		this.gamegui.updateGameState(queenCur, queenNxt, arrowPos);
 		
+		// just in case of errors; this shouldn't be an issue
 		if(mcts != null) {
 			mcts.moveQueen(enemy, a);
 			

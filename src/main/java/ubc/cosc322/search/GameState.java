@@ -180,6 +180,7 @@ public class GameState {
                 Queen move = new Queen(q.row, q.col - i);
                 move.prevCol = q.col;
                 move.prevRow = q.row;
+                move.friendly = q.friendly;
                 mvs.add(move);
             }
             else
@@ -194,6 +195,7 @@ public class GameState {
                 Queen move = new Queen(q.row, q.col + i);
                 move.prevCol = q.col;
                 move.prevRow = q.row;
+                move.friendly = q.friendly;
                 mvs.add(move);
             }
             else
@@ -208,6 +210,7 @@ public class GameState {
                 Queen move = new Queen(q.row - i, q.col);
                 move.prevCol = q.col;
                 move.prevRow = q.row;
+                move.friendly = q.friendly;
                 mvs.add(move);
             }
             else
@@ -222,6 +225,7 @@ public class GameState {
                 Queen move = new Queen(q.row + i, q.col);
                 move.prevCol = q.col;
                 move.prevRow = q.row;
+                move.friendly = q.friendly;
                 mvs.add(move);
             }
             else
@@ -236,6 +240,7 @@ public class GameState {
                 Queen move = new Queen(q.row - i, q.col - i);
                 move.prevCol = q.col;
                 move.prevRow = q.row;
+                move.friendly = q.friendly;
                 mvs.add(move);
             }
             else
@@ -250,6 +255,7 @@ public class GameState {
                 Queen move = new Queen(q.row + i, q.col - i);
                 move.prevCol = q.col;
                 move.prevRow = q.row;
+                move.friendly = q.friendly;
                 mvs.add(move);
             }
             else
@@ -264,6 +270,7 @@ public class GameState {
                 Queen move = new Queen(q.row + i, q.col + i);
                 move.prevCol = q.col;
                 move.prevRow = q.row;
+                move.friendly = q.friendly;
                 mvs.add(move);
             }
             else
@@ -278,6 +285,7 @@ public class GameState {
                 Queen move = new Queen(q.row - i, q.col + i);
                 move.prevCol = q.col;
                 move.prevRow = q.row;
+                move.friendly = q.friendly;
                 mvs.add(move);
             }
             else
