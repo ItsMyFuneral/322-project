@@ -160,12 +160,12 @@ public class MonteCarloTreeSearch {
 		// make sure we improve AND that the move isn't a blunder
 		boolean approved = queenHVal > this.heuristicValue && !isBlunder;
 		
-		int turns = 0;
-		while(status == 0.5 && turns < 11)
+		//int turns = 0;
+		while(status == 0.5)// && turns < 11)
 		{
 			st.makeRandomPlay();
 			status = st.checkStatus();
-			turns++;
+			//turns++;
 		}
 		if(status == 0.5)
 		{
