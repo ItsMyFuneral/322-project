@@ -23,9 +23,9 @@ public class TerritoryHeuristic {
 				dists[i][j] = new ShortestMove();
 			}
 		}
-
-		setDist(false);
+		
 		setDist(true);
+		setDist(false);
 		
 		//set up variables to do an average of the evaluations
 		double sum = 0;
@@ -40,7 +40,7 @@ public class TerritoryHeuristic {
 					count++;
 				}
 		
-		return sum / count;
+		return sum / (double) count;
 		
 	}
 	

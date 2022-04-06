@@ -20,7 +20,7 @@ public class KeepYourselfAliveHeuristic {
     public double calc(GameState state) {
         this.state = state;
 
-        return (double) getLiveQueens(true) - (double)getLiveQueens(false);
+        return getLiveQueens(true) - (double)getLiveQueens(false);
     }
 
     private int getLiveQueens(boolean friendly) {
@@ -46,18 +46,17 @@ public class KeepYourselfAliveHeuristic {
 
         //if queen has one or fewer moves
         boolean oneMove = frontier.size() <= 1;
-        ArrayList<Queen> newFrontier = new ArrayList<>();
+        ArrayList<Queen> newQ = new ArrayList<>();
 
         for(Queen move: frontier) {
             ArrayList<Queen> moves = state.getMoves(move);
             moves.removeAll(visited);
 
-            newFrontier.addAll(moves);
+            newQ.addAll(moves);
         }
         
-        frontier = newFrontier;
+        frontier = newQ;
         visited.addAll(frontier);
-        
 
         return frontier.isEmpty() && oneMove;
     }
