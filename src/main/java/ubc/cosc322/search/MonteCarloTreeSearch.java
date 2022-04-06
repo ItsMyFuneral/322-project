@@ -12,7 +12,7 @@ class UCT {
 	public static double uctValue(double totalTrials, double nodeWinScore, double nodeTrials) {
 		if(nodeTrials == 0) return Double.MAX_VALUE;		//PRIORITIZE FIRST TRIAL
 		return ((double) nodeWinScore / (double) nodeTrials) + 
-				Math.sqrt(2) * Math.sqrt(Math.log(totalTrials) / (double) nodeTrials);
+				1 * Math.sqrt(Math.log(totalTrials) / (double) nodeTrials);
 	}
 	
 	public static MCTSNode findBestNodeUCT(MCTSNode node) {
