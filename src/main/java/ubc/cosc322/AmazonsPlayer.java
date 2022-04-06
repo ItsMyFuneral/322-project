@@ -25,7 +25,7 @@ public class AmazonsPlayer extends GamePlayer {
 	private String password = null;
 	
 	//basic info: player colour and turn counter
-	private boolean isWhite = true;
+	private boolean isWhite;
 	private int turn = 0;
 	
 	public boolean running = true;
@@ -72,6 +72,7 @@ public class AmazonsPlayer extends GamePlayer {
 		this.gamegui.updateGameState(qpC,qpN,arP);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void handleOpponentMove(Map<String, Object> msgDetails)
 	{
 		//read info. All these unchecked casts are safe because we know what the objects are
